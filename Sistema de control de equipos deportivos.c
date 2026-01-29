@@ -67,3 +67,25 @@ void pausar() {
     printf("\nPresione ENTER para continuar...");
     getchar();
 }
+
+void guardardatos(jugador lista[], int n) {
+    FILE *file = fopen(ARCHIVO, "wb");
+    if (file) {
+        fwrite(lista, sizeof(jugador), n, file);
+        fclose(file);
+    } else {
+        printf("Error al guardar en archivo.\n");
+    }
+}
+
+int seachDorsal(jugador lista[], int n, int dorsal) {
+    for (int i = 0; i < n; i++) {
+        if (lista[i].dorsal == dorsal) return i;
+    }
+    return -1;
+}
+
+int sumarGol(jugador lista[], int n, int index) {
+    if (index >= n) return 0;
+    return lista[index].anotaciones + sumarGol(lista, n, index + 1);
+}
