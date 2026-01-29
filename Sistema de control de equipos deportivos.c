@@ -89,3 +89,65 @@ int sumarGol(jugador lista[], int n, int index) {
     if (index >= n) return 0;
     return lista[index].anotaciones + sumarGol(lista, n, index + 1);
 }
+oid addjugador(jugador lista[], int *n) {
+    limpiarpantalla();
+    if (*n >= MAX_JUGADORES) {
+        printf("Error: Base de datos llena (Max %d).\n", MAX_JUGADORES);
+        return;
+    }
+
+    jugador nuevo;
+    printf("=== REGISTRO DE jugador ===\n");
+    
+    printf("Ingrese Dorsal: ");
+    if (scanf("%d", &nuevo.dorsal) != 1) {
+        printf("Error: Entrada no numerica.\n");
+        limpiarbuff();
+        return;
+    }
+    limpiarbuff();
+
+    if (seachDorsal(lista, *n, nuevo.dorsal) != -1) {
+        printf("\nError: Ya existe un jugador con el dorsal %d.\n", nuevo.dorsal);
+        return;
+    }
+
+    printf("Ingrese Nombre: ");
+    fgets(nuevo.nombre, sizeof(nuevo.nombre), stdin);
+    nuevo.nombre[strcspn(nuevo.nombre, "\n")] = 0;
+
+    printf("Ingrese Posicion: ");
+    fgets(nuevo.posicion, sizeof(nuevo.posicion), stdin);
+    nuevo.posicion[strcspn(nuevo.posicion, "\n")] = 0;
+
+    nuevo.anotaciones = 0;
+    lista[*n] = nuevo;
+    (*n)++; 
+    
+    guardardatos(lista, *n);
+    printf("\njugador %s registrado exitosamente.\n", nuevo.nombre);
+}
+
+void addAnotacion(jugador lista[], int n) {
+    limpiarpantalla();
+    if (n == 0) { printf("No existen jugadores registrados.\n"); return; }
+
+    int dorsal, idx;
+    printf("=== REGISTRAR ANOTACION ===\n");
+    printf("Ingrese el Dorsal: ");
+    if (scanf("%d", &dorsal) != 1) {
+        printf("Entrada invalida.\n");
+        limpiarbuff();
+        return;
+    }
+    limpiarbuff();
+
+    idx = seachDorsal(lista, n, dorsal);
+    if (idx != -1) {
+        lista[idx].anotaciones++;
+        guardardatos(lista, n);
+        printf("\nGol registrado a %s!\nTotal Goles: %d\n", lista[idx].nombre, lista[idx].anotaciones);
+    } else {
+        printf("\nError: jugador con dorsal %d no encontrado.\n", dorsal);
+    }
+}
