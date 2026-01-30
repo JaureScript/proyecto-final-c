@@ -151,3 +151,83 @@ void addAnotacion(jugador lista[], int n) {
         printf("\nError: jugador con dorsal %d no encontrado.\n", dorsal);
     }
 }
+void seachjugador(jugador lista[], int n) {
+    limpiarpantalla();
+    if (n == 0) { printf("No existen jugadores registrados.\n"); return; }
+
+    int dorsal, idx;
+    printf("=== BUSCAR jugador ===\n");
+    printf("Ingrese el dorsal: ");
+    scanf("%d", &dorsal);
+    limpiarbuff();
+
+    idx = seachDorsal(lista, n, dorsal);
+    if (idx != -1) {
+        printf("\n--- Datos del jugador ---\n");
+        printf("Nombre:    %s\n", lista[idx].nombre);
+        printf("Posicion:  %s\n", lista[idx].posicion);
+        printf("Dorsal:    %d\n", lista[idx].dorsal);
+        printf("Goles:     %d\n", lista[idx].anotaciones);
+    } else {
+        printf("\nNo se encontro el dorsal %d.\n", dorsal);
+    }
+}
+
+void reportTotal(jugador lista[], int n) {
+    limpiarpantalla();
+    if (n == 0) { printf("No existen jugadores registrados.\n"); return; }
+
+    printf("=== REPORTE DEL EQUIPO ===\n");
+    printf("Total: %d jugadores\n\n", n);
+    printf("---------------------------------------------\n");
+    printf("| %-6s | %-20s | %-8s |\n", "Dorsal", "Nombre", "Goles");
+    printf("---------------------------------------------\n");
+
+    for (int i = 0; i < n; i++) {
+        printf("| #%-5d | %-20.20s | %-8d |\n", 
+               lista[i].dorsal, lista[i].nombre, lista[i].anotaciones);
+    }
+
+    printf("---------------------------------------------\n");
+    printf("TOTAL DE GOLES DEL EQUIPO: %d\n", sumarGol(lista, n, 0));
+}
+void seachjugador(jugador lista[], int n) {
+    limpiarpantalla();
+    if (n == 0) { printf("No existen jugadores registrados.\n"); return; }
+
+    int dorsal, idx;
+    printf("=== BUSCAR jugador ===\n");
+    printf("Ingrese el dorsal: ");
+    scanf("%d", &dorsal);
+    limpiarbuff();
+
+    idx = seachDorsal(lista, n, dorsal);
+    if (idx != -1) {
+        printf("\n--- Datos del jugador ---\n");
+        printf("Nombre:    %s\n", lista[idx].nombre);
+        printf("Posicion:  %s\n", lista[idx].posicion);
+        printf("Dorsal:    %d\n", lista[idx].dorsal);
+        printf("Goles:     %d\n", lista[idx].anotaciones);
+    } else {
+        printf("\nNo se encontro el dorsal %d.\n", dorsal);
+    }
+}
+
+void reportTotal(jugador lista[], int n) {
+    limpiarpantalla();
+    if (n == 0) { printf("No existen jugadores registrados.\n"); return; }
+
+    printf("=== REPORTE DEL EQUIPO ===\n");
+    printf("Total: %d jugadores\n\n", n);
+    printf("---------------------------------------------\n");
+    printf("| %-6s | %-20s | %-8s |\n", "Dorsal", "Nombre", "Goles");
+    printf("---------------------------------------------\n");
+
+    for (int i = 0; i < n; i++) {
+        printf("| #%-5d | %-20.20s | %-8d |\n", 
+               lista[i].dorsal, lista[i].nombre, lista[i].anotaciones);
+    }
+
+    printf("---------------------------------------------\n");
+    printf("TOTAL DE GOLES DEL EQUIPO: %d\n", sumarGol(lista, n, 0));
+}
