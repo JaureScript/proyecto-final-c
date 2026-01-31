@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+// Archivo binario para almacenar datos
 #define ARCHIVO "base_datos_equipos.dat"
 #define MAX_JUGADORES 50
 
@@ -18,39 +19,65 @@ typedef struct {
     char posicion[30];
     int dorsal;
     int anotaciones;
-} Jugador;
+} jugador;
 
 // Prototipos de Funciones
-// Esto le dice al compilador que las funciones existen más abajo.
-void limpiarPantalla();
-void limpiarBuffer();
+void limpiarpantalla();
+void limpiarbuff();
 void pausar();
+void guardardatos(jugador lista[], int n);
+int seachDorsal(jugador lista[], int n, int dorsal);
+int sumarGol(jugador lista[], int n, int index);
+void addjugador(jugador lista[], int *n);
+void addAnotacion(jugador lista[], int n);
+void seachjugador(jugador lista[], int n);
+void reportTotal(jugador lista[], int n);
 
 //  Función Principal
 int main() {
-    Jugador lista[MAX_JUGADORES];
+    jugador lista[MAX_JUGADORES];
     int n = 0;
-    int op;
 
+    FILE *file = fopen(ARCHIVO, "rb");
+    if (file) {
+        n = fread(lista, sizeof(jugador), MAX_JUGADORES, file);
+        fclose(file);
+    }
+
+    int op;
     do {
-        limpiarPantalla();
+        limpiarpantalla();
         printf("=== CONTROL DE EQUIPOS ===\n");
-        printf("1. Registrar Jugador (Proximamente)\n");
+        printf("1. Registrar Jugador\n");
+        printf("2. Registrar Anotacion\n");
+        printf("3. Buscar Jugador\n");
+        printf("4. Generar Reporte\n");
         printf("5. Salir\n");
         printf("Seleccione: ");
         
         if (scanf("%d", &op) != 1) {
-            limpiarBuffer();
+            limpiarbuff();
             op = -1;
         } else {
-            limpiarBuffer();
+            limpiarbuff();
         }
+
+        switch (op) {
+            case 1: addjugador(lista, &n); pausar(); break;
+            case 2: addAnotacion(lista, n); pausar(); break;
+            case 3: seachjugador(lista, n); pausar(); break;
+            case 4: reportTotal(lista, n); pausar(); break;
+            case 5: printf("Saliendo del programa...\n"); break;
+            default: printf("\nOPCION INVALIDA.\n"); pausar();
+        }
+
     } while (op != 5);
 
+    pausar();
     return 0;
 }
 
-void limpiarPantalla() {
+void limpiarpantalla() {
     #ifdef _WIN32
         system("cls");
     #else
@@ -58,7 +85,7 @@ void limpiarPantalla() {
     #endif
 }
 
-void limpiarBuffer() {
+void limpiarbuff() {
     int c;
     while ((c = getchar()) != '\n' && c != EOF);
 }
@@ -89,7 +116,7 @@ int sumarGol(jugador lista[], int n, int index) {
     if (index >= n) return 0;
     return lista[index].anotaciones + sumarGol(lista, n, index + 1);
 }
-oid addjugador(jugador lista[], int *n) {
+void addjugador(jugador lista[], int *n) {
     limpiarpantalla();
     if (*n >= MAX_JUGADORES) {
         printf("Error: Base de datos llena (Max %d).\n", MAX_JUGADORES);
@@ -158,7 +185,11 @@ void seachjugador(jugador lista[], int n) {
     int dorsal, idx;
     printf("=== BUSCAR jugador ===\n");
     printf("Ingrese el dorsal: ");
-    scanf("%d", &dorsal);
+    if (scanf("%d", &dorsal) != 1) {
+        printf("Entrada invalida.\n");
+        limpiarbuff();
+        return;
+    }
     limpiarbuff();
 
     idx = seachDorsal(lista, n, dorsal);
@@ -190,44 +221,5 @@ void reportTotal(jugador lista[], int n) {
 
     printf("---------------------------------------------\n");
     printf("TOTAL DE GOLES DEL EQUIPO: %d\n", sumarGol(lista, n, 0));
-}
-void seachjugador(jugador lista[], int n) {
-    limpiarpantalla();
-    if (n == 0) { printf("No existen jugadores registrados.\n"); return; }
 
-    int dorsal, idx;
-    printf("=== BUSCAR jugador ===\n");
-    printf("Ingrese el dorsal: ");
-    scanf("%d", &dorsal);
-    limpiarbuff();
-
-    idx = seachDorsal(lista, n, dorsal);
-    if (idx != -1) {
-        printf("\n--- Datos del jugador ---\n");
-        printf("Nombre:    %s\n", lista[idx].nombre);
-        printf("Posicion:  %s\n", lista[idx].posicion);
-        printf("Dorsal:    %d\n", lista[idx].dorsal);
-        printf("Goles:     %d\n", lista[idx].anotaciones);
-    } else {
-        printf("\nNo se encontro el dorsal %d.\n", dorsal);
-    }
-}
-
-void reportTotal(jugador lista[], int n) {
-    limpiarpantalla();
-    if (n == 0) { printf("No existen jugadores registrados.\n"); return; }
-
-    printf("=== REPORTE DEL EQUIPO ===\n");
-    printf("Total: %d jugadores\n\n", n);
-    printf("---------------------------------------------\n");
-    printf("| %-6s | %-20s | %-8s |\n", "Dorsal", "Nombre", "Goles");
-    printf("---------------------------------------------\n");
-
-    for (int i = 0; i < n; i++) {
-        printf("| #%-5d | %-20.20s | %-8d |\n", 
-               lista[i].dorsal, lista[i].nombre, lista[i].anotaciones);
-    }
-
-    printf("---------------------------------------------\n");
-    printf("TOTAL DE GOLES DEL EQUIPO: %d\n", sumarGol(lista, n, 0));
 }
