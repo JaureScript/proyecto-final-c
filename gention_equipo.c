@@ -210,16 +210,16 @@ void reportTotal(jugador lista[], int n) {
 
     printf("=== REPORTE DEL EQUIPO ===\n");
     printf("Total: %d jugadores\n\n", n);
-    printf("---------------------------------------------\n");
-    printf("| %-6s | %-20s | %-8s |\n", "Dorsal", "Nombre", "Goles");
-    printf("---------------------------------------------\n");
+    printf("----------------------------------------------------------------\n");
+    printf("| %-6s | %-20s | %-15s | %-8s |\n", "Dorsal", "Nombre","Posicion", "Goles");
+    printf("----------------------------------------------------------------\n");
 
     for (int i = 0; i < n; i++) {
-        printf("| #%-5d | %-20.20s | %-8d |\n", 
-               lista[i].dorsal, lista[i].nombre, lista[i].anotaciones);
+        printf("| #%-5d | %-20.20s | %-15.15s | %-8d |\n", 
+               lista[i].dorsal, lista[i].nombre, lista[i].posicion, lista[i].anotaciones);
     }
 
-    printf("---------------------------------------------\n");
+    printf("----------------------------------------------------------------\n");
     printf("TOTAL DE GOLES DEL EQUIPO: %d\n", sumarGol(lista, n, 0));
 
 }
